@@ -3,15 +3,15 @@ SISTEMA HORTIFRUTI
 TECNOLOGIAS SENDO USADAS:
 
 BACKEND: 
-Python(flask)
-Sqlalchemy
+Python(flask),
+Sqlalchemy,
 jsonify
 
 BANCO DE DADOS:
 MySql
 
 FRONTEND:
-html
-CSS
-JavaScript
+html,
+CSS,
+JavaScript,
 Bootstrap.
