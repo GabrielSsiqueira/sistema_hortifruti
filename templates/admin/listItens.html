@@ -1,0 +1,115 @@
+{% extends 'admin/base_adm.html' %}
+
+{% block conteudo %}
+<div class="card">
+    <div class="card-header">
+        <div class="justify-content-between d-flex">
+            <h2 class="card-title text-dark">Listagem</h2>
+            <div>
+                <a href="{{ url_for('admin.addItens') }}" class="btn btn-primary">Adicionar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <table class="table table-responsive table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Preço</th>
+                            <th>Imagem</th>
+                            <th>Cesta</th>
+                            <th>Ver</th>
+                            <th>Editar</th>
+                            <th>Excluir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in itens %}
+                        <tr>
+                            <td>{{ i.id }}</td>
+                            <td>{{ i.nome }}</td>
+                            <td>{{ i.descricao }}</td>
+                            <td>{{ i.preco }}</td>
+                            <td>{{ i.imagem }}</td>
+                            <td>{{ i.cesta_id }}</td>
+                            <td>
+                                <a class="btn btn-info" href="">Ver</a>
+                            </td>
+                            <td><a class="btn btn-warning" href="">Editar</a></td>
+                            <td>
+                                <a href="#" 
+                                class="btn btn-danger" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#confirmDeleteModal" 
+                                data-id="{{ i.id }}" 
+                                data-nome="{{ i.nome }}" 
+                                onclick="setDeleteAction(this)">
+                                    Excluir
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Você tem certeza que deseja excluir o item **<span id="itemNome"></span>**?
+                    Esta ação é irreversível.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    
+                    <form method="POST" id="deleteForm" action="">
+                        <button type="submit" class="btn btn-danger">Excluir Item</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    function setDeleteAction(element) {
+        const itemId = element.getAttribute('data-id');
+        const itemName = element.getAttribute('data-nome');
+        
+        const form = document.getElementById('deleteForm');
+        const itemNomeSpan = document.getElementById('itemNome');
+        
+        itemNomeSpan.textContent = itemName;
+        
+        // 1. Obtém o caminho base da rota (ex: '/hortifruti/admin/DeleteItem/')
+        // Usamos um ID dummy (como 0) para o Flask construir a URL corretamente,
+        // e o JavaScript vai substituir.
+        // Como o Flask exige um INT, usamos 0, que é um INT válido.
+        const baseUrl = "{{ url_for('admin.delete_item', id=0) }}";
+        
+        // 2. Remove o ID dummy (o '0') do final da URL
+        const baseRoute = baseUrl.slice(0, -1);
+        
+        // 3. Constrói a action final no JavaScript com o ID real
+        form.action = baseRoute + itemId;
+    }
+</script>
+{% endblock %} 

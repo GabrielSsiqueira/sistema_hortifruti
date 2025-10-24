@@ -1,0 +1,122 @@
+{% extends 'admin/base_adm.html' %}
+
+{% block conteudo %}
+<div class="card">
+    <div class="card-header">
+        <div class="justify-content-between d-flex">
+            <h2 class="card-title">Cadastrar Itens</h2>
+            <div>
+                <a href="{{ url_for('admin.listItens') }}" class="btn btn-secondary">Voltar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <form id="form-item">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="form-group">
+                                <label for="nome">Nome:</label>
+                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome..."
+                                    required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="form-group">
+                                <label for="descricao">Descrição:</label>
+                                <input type="text" class="form-control" id="descricao" name="descricao"
+                                    placeholder="Descrição..." required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-2 col-md-12">
+                            <div class="form-group">
+                                <label for="preco">Preço:</label>
+                                <input type="number" step="0.01" min="0" class="form-control" id="preco" name="preco"
+                                    placeholder="preço.." required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5 col-md-12">
+                            <div class="form-group">
+                                <label for="id_cesta">Selecione uma Cesta:</label>
+                                <select class="form-control" id="id_cesta" name="id_cesta" required>
+                                    <option value="">Escolha uma Cesta</option>
+                                    {% for c in cestas %}
+                                    <option value="{{ c.id }}">{{ c.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5 col-md-12">
+                            <div class="form-group">
+                                <label for="imagem">Imagem:</label>
+                                <input type="file" class="form-control" accept="image/*" id="imagem" name="imagem"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    document.getElementById('form-item').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const nome = e.target.nome.value;
+        const descricao = e.target.descricao.value;
+        const preco = e.target.preco.value;
+        const id_cesta = e.target.id_cesta.value;
+        const arquivo = e.target.imagem.files[0];
+
+        // converte para base64
+        const base64 = await toBase64(arquivo);
+
+        // montar o Json
+        const data = {
+            nome,
+            descricao,
+            preco,
+            id_cesta,
+            imagem: base64
+        };
+
+        const response = await fetch('/hortifruti/admin/createItens', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        const resultado = await response.json();
+        alert(resultado.mensagem);
+    });
+
+    function toBase64(file){
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    }
+</script>
+{% endblock %}
+
+

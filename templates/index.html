@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  
+  <div id="carouselProdutos" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{{url_for('static', filename='img/frutas/frutas-1.jpg')}}" class="d-block w-100" alt="Frutas frescas">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Frutas Fresquinhas</h5>
+          <p>Colhidas direto do campo para sua mesa 🍎🍊🍌</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{{ url_for('static', filename='img/frutas/frutas-3.jpeg') }}" class="d-block w-100" alt="Legumes">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Legumes Saudáveis</h5>
+          <p>Qualidade e sabor que fazem bem à saúde 🥦🥕</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProdutos" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselProdutos" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+  <section id="cestas" class="container my-5">
+    <h2 class="text-center mb-4 text-warning">🔥 Cestas</h2>
+    <div class="row">
+      {% for cesta in cestas %}
+      <div class="col-md-4">
+        <div class="card promo-card shadow-sm">
+          <img src="{{ cesta.imagem }}" class="card-img-top" alt="Maçãs">
+          <div class="card-body">
+            <h5 class="card-title text-center">{{cesta.nome}}</h5>
+            <p class="card-text text-center">{{cesta.descricao}}</p>
+            <p class="text-success fw-bold text-center"><strong>R$ {{"%.2f" | format(cesta.preco) }} a cesta</strong></p>
+            <div class="text-center">
+              <a href="#" class="btn btn-success w-50">Ver</a>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+
+  <section id="promocoes" class="container my-5">
+    <h2 class="text-center mb-4 text-warning">🔥 Promoções da Semana</h2>
+    <div class="row">
+      {% if itens_em_promocao %}
+        {% for item in itens_em_promocao %}
+          <div class="col-md-4">
+            <div class="card promo-card shadow-sm">
+              <img src="{{ item.imagem }}" class="card-img-top" alt="Maçãs">
+              <div class="card-body">
+                <h5 class="card-title text-center">{{ item.nome }}</h5>
+                <p>{{item.descricao}}</p>
+                <p class="card-text">De: <strong class="text-danger" >R$ {{ "%.2f" | format(item.preco_original) }} o kg</p>
+                <p class="card-text"></strong>Por: <strong class="text-success">R$ {{ "%.2f" | format(item.preco_promocao) }} ({{ item.desconto}} OFF!) o kg.</strong></p>
+
+                <div class="text-center">
+                  <a href="#" class="btn btn-success">🛒 Adicionar</a>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="contato" class="container my-5">
+    <h2 class="text-center mb-4 text-warning">📞 Fale Conosco</h2>
+    <form class="row g-3">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Seu nome">
+      </div>
+      <div class="col-md-6">
+        <input type="email" class="form-control" placeholder="Seu email">
+      </div>
+      <div class="col-12">
+        <textarea class="form-control" rows="4" placeholder="Sua mensagem"></textarea>
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-success w-25">Enviar</button>
+      </div>
+    </form>
+  </section>
+  
+{% endblock %}
